@@ -4,9 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// Classes needed for serialization
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Kuntosali2
 {
     // Person is a super class for class Member
+    [Serializable]
     class Person
     {
         // Class attributes are protected to allow inheritace
@@ -78,12 +84,11 @@ namespace Kuntosali2
                     return fatPercent;
                 }
             }
-
-
         }
     }
 
     // Member class inherits attributes and methods from Pernson class
+    [Serializable]
     class Member : Person
     {
         // Attributes for Member not in Person class
@@ -113,6 +118,7 @@ namespace Kuntosali2
             static void Main(string[] args)
             {
                 // Variables for UI
+                string filePath;
                 string firstName;
                 string lastName;
                 double height;
@@ -129,45 +135,63 @@ namespace Kuntosali2
                 string feeAsText;
                 string bonusAsText;
 
-                // Asking for user input
-                Console.Write("Type members first name: ");
-                firstName = Console.ReadLine();
-                Console.Write("Type members lastname: ");
-                lastName = Console.ReadLine();
-                Console.Write("Insert height: ");
-                heightAsText = Console.ReadLine();
-                Console.Write("Insert weight: ");
-                weigthAsText = Console.ReadLine();
-                Console.Write("Insert age: ");
-                ageAsText = Console.ReadLine();
-                Console.Write("sex male 1, female 0: ");
-                sexAsText = Console.ReadLine();
-                Console.Write("Type member id: ");
-                memberId = Console.ReadLine();
-                Console.Write("Insert membership fee: ");
-                feeAsText = Console.ReadLine();
-                Console.Write("Insert bonus: ");
-                bonusAsText = Console.ReadLine();
+                // Create array for objects to store
+                Member[] members = new Member[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    // Asking for user input
+                    Console.Write("Type members first name: ");
+                    firstName = Console.ReadLine();
+                    Console.Write("Type members lastname: ");
+                    lastName = Console.ReadLine();
+                    Console.Write("Insert height: ");
+                    heightAsText = Console.ReadLine();
+                    Console.Write("Insert weight: ");
+                    weigthAsText = Console.ReadLine();
+                    Console.Write("Insert age: ");
+                    ageAsText = Console.ReadLine();
+                    Console.Write("sex male 1, female 0: ");
+                    sexAsText = Console.ReadLine();
+                    Console.Write("Type member id: ");
+                    memberId = Console.ReadLine();
+                    Console.Write("Insert membership fee: ");
+                    feeAsText = Console.ReadLine();
+                    Console.Write("Insert bonus: ");
+                    bonusAsText = Console.ReadLine();
 
-                // Convert input strings to numeric values
-                height = Double.Parse(heightAsText);
-                weight = Double.Parse(weigthAsText);
-                age = UInt32.Parse(ageAsText);
-                sex = UInt32.Parse(sexAsText);
-                fee = Double.Parse(feeAsText);
-                bonus = Double.Parse(bonusAsText);
+                    // Convert input strings to numeric values
+                    height = Double.Parse(heightAsText);
+                    weight = Double.Parse(weigthAsText);
+                    age = UInt32.Parse(ageAsText);
+                    sex = UInt32.Parse(sexAsText);
+                    fee = Double.Parse(feeAsText);
+                    bonus = Double.Parse(bonusAsText);
 
-
-
-
-
-                Member member1 = new Member(firstName, lastName, height, weight, age, sex, memberId, fee, bonus);
-                Console.WriteLine(member1.givenName);
-                Console.WriteLine(member1.membershipFee);
-                double amountFat = member1.fatPercent();
-                Console.WriteLine("The fat percentage is " + amountFat);
+                    members[i] = new Member(firstName, lastName, height, weight, age, sex, memberId, fee, bonus);
+                }
+                Console.WriteLine("Last name is " + members[2].surName);
                 Console.ReadLine();
 
+                //// Ask filename and path
+                //Console.Write("Enter path and filename to save member data");
+                //filePath = Console.ReadLine();
+
+                // File path for dat file 2 backlashes needed for a single backslash
+                filePath = "C:\\Users\\admin\\Documents\\members.dat";
+
+                // Create filestream and binary formatter for serialization
+                FileStream fileStream = File.OpenWrite(filePath);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+                // Write every element in array to filestream
+                for (int i = 0; i < members.Length; i++)
+                {
+                    binaryFormatter.Serialize(fileStream, members[i]);
+                }
+
+                //Close filestream
+                fileStream.Flush();
+                fileStream.Close();
             }
         }
     }
