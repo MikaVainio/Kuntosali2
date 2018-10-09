@@ -135,63 +135,79 @@ namespace Kuntosali2
                 string feeAsText;
                 string bonusAsText;
 
-                // Create array for objects to store
-                Member[] members = new Member[4];
-                for (int i = 0; i < 4; i++)
-                {
-                    // Asking for user input
-                    Console.Write("Type members first name: ");
-                    firstName = Console.ReadLine();
-                    Console.Write("Type members lastname: ");
-                    lastName = Console.ReadLine();
-                    Console.Write("Insert height: ");
-                    heightAsText = Console.ReadLine();
-                    Console.Write("Insert weight: ");
-                    weigthAsText = Console.ReadLine();
-                    Console.Write("Insert age: ");
-                    ageAsText = Console.ReadLine();
-                    Console.Write("sex male 1, female 0: ");
-                    sexAsText = Console.ReadLine();
-                    Console.Write("Type member id: ");
-                    memberId = Console.ReadLine();
-                    Console.Write("Insert membership fee: ");
-                    feeAsText = Console.ReadLine();
-                    Console.Write("Insert bonus: ");
-                    bonusAsText = Console.ReadLine();
+                //// Create array for objects to store
+                //Member[] members = new Member[4];
+                //for (int i = 0; i < 4; i++)
+                //{
+                //    // Asking for user input
+                //    Console.Write("Type members first name: ");
+                //    firstName = Console.ReadLine();
+                //    Console.Write("Type members lastname: ");
+                //    lastName = Console.ReadLine();
+                //    Console.Write("Insert height: ");
+                //    heightAsText = Console.ReadLine();
+                //    Console.Write("Insert weight: ");
+                //    weigthAsText = Console.ReadLine();
+                //    Console.Write("Insert age: ");
+                //    ageAsText = Console.ReadLine();
+                //    Console.Write("sex male 1, female 0: ");
+                //    sexAsText = Console.ReadLine();
+                //    Console.Write("Type member id: ");
+                //    memberId = Console.ReadLine();
+                //    Console.Write("Insert membership fee: ");
+                //    feeAsText = Console.ReadLine();
+                //    Console.Write("Insert bonus: ");
+                //    bonusAsText = Console.ReadLine();
 
-                    // Convert input strings to numeric values
-                    height = Double.Parse(heightAsText);
-                    weight = Double.Parse(weigthAsText);
-                    age = UInt32.Parse(ageAsText);
-                    sex = UInt32.Parse(sexAsText);
-                    fee = Double.Parse(feeAsText);
-                    bonus = Double.Parse(bonusAsText);
+                //    // Convert input strings to numeric values
+                //    height = Double.Parse(heightAsText);
+                //    weight = Double.Parse(weigthAsText);
+                //    age = UInt32.Parse(ageAsText);
+                //    sex = UInt32.Parse(sexAsText);
+                //    fee = Double.Parse(feeAsText);
+                //    bonus = Double.Parse(bonusAsText);
 
-                    members[i] = new Member(firstName, lastName, height, weight, age, sex, memberId, fee, bonus);
-                }
-                Console.WriteLine("Last name is " + members[2].surName);
-                Console.ReadLine();
+                //    members[i] = new Member(firstName, lastName, height, weight, age, sex, memberId, fee, bonus);
+                //}
+                //Console.WriteLine("Last name is " + members[2].surName);
+                //Console.ReadLine();
 
-                //// Ask filename and path
-                //Console.Write("Enter path and filename to save member data");
-                //filePath = Console.ReadLine();
+                ////// Ask filename and path
+                ////Console.Write("Enter path and filename to save member data");
+                ////filePath = Console.ReadLine();
 
-                // File path for dat file 2 backlashes needed for a single backslash
+                //// File path for dat file 2 backlashes needed for a single backslash
                 filePath = "C:\\Users\\admin\\Documents\\members.dat";
 
-                // Create filestream and binary formatter for serialization
-                FileStream fileStream = File.OpenWrite(filePath);
+                //// Create filestream and binary formatter for serialization
+                //FileStream fileStream = File.OpenWrite(filePath);
+                //BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+                //// Write every element in array to filestream
+                //for (int i = 0; i < members.Length; i++)
+                //{
+                //    binaryFormatter.Serialize(fileStream, members[i]);
+                //}
+
+                ////Close filestream
+                //fileStream.Flush();
+                //fileStream.Close();
+
+                // Create empyt Member object
+                Member member = null;
+
+                // Create Filestream for reding
+                FileStream readFileStream = File.OpenRead(filePath);
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
 
-                // Write every element in array to filestream
-                for (int i = 0; i < members.Length; i++)
+                while (readFileStream.Position != readFileStream.Length)
                 {
-                    binaryFormatter.Serialize(fileStream, members[i]);
+                    member = (Member)(binaryFormatter.Deserialize(readFileStream));
+                    Console.WriteLine("Lastname of the member is: " + member.surName);
                 }
+                readFileStream.Close();
+                Console.ReadLine();
 
-                //Close filestream
-                fileStream.Flush();
-                fileStream.Close();
             }
         }
     }
